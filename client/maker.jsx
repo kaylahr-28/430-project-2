@@ -30,6 +30,12 @@ const handlePost = (e, onPostAdded) => {
     return false;
 }
 
+const CreatePostBtn = ({ onShowPopup }) => {
+    return (
+        <button id='createBtn' onClick={onShowPopup}>Create Post!</button>
+    );
+}
+
 const PostForm = ({ showPopup, closePopup }) => {
 
     useEffect(() => {
@@ -52,11 +58,14 @@ const PostForm = ({ showPopup, closePopup }) => {
                 className='postForm'>
 
                 <label htmlFor='songName'>Song Title: </label>
-                <input id='songName' type='text' name='name' placeholder='Song Name' />
+                <input id='songName' type='text' name='title' placeholder='Song Name' />
+                <label htmlFor='songArtist'>Artist: </label>
+                <input id='songArtist' type='text' name='artist' placeholder='Artist Name' />
+
                 <label htmlFor='songRank'>Ranking (/5): </label>
                 <input id='songRank' type='number' min='0' max='5' name='rank' />
                 <label htmlFor='songDesc'>Description: </label>
-                <input id='songDesc' type='text' name='desc' placeholder='Song Rating Reasoning' />
+                <input id='songDesc' type='text' name='desc' placeholder='Reasoning' />
 
                 <input className='makePostSubmit' type='submit' value='Create Post' />
             </form>
@@ -69,7 +78,7 @@ const PostForm = ({ showPopup, closePopup }) => {
 
 };
 
-const PostList = (props, showPopup, onShowPopup) => {
+const PostList = (props, showPopup) => {
     const [posts, setPosts] = useState(props.posts);
 
     useEffect(() => {
@@ -77,8 +86,10 @@ const PostList = (props, showPopup, onShowPopup) => {
         if (showPopup) {
             helper?.showPostForm();
         } else {
-            helper?.hidePostForm();
+            if (document.getElementById('postOverlay')) {
+                helper?.hidePostForm();
 
+            }
         }
     }, [showPopup]);
 
@@ -95,8 +106,6 @@ const PostList = (props, showPopup, onShowPopup) => {
         return (
             <div className='domoList'>
                 <h3 className='emptyDomo'>No Posts Yet...</h3>
-                <button onClick={onShowPopup}>Create Post!</button>
-
             </div>
         );
     }
@@ -105,8 +114,8 @@ const PostList = (props, showPopup, onShowPopup) => {
         return (
             <div key={post._id} className='domo'>
                 <img src='/assets/img/domoface.jpeg' alt='domo face' className='domoFace' />
-                <h3 className='domoName'>Name: {post.name}</h3>
-                <h3 className='domoAge'>Rank: {post.age}/5</h3>
+                <h3 className='domoTitle'>{post.title} by {post.artist}</h3>
+                <h3 className='domoAge'>Rank: {post.rank}/5</h3>
                 {/**if a description was given, add it to display */}
                 {post.desc ? <p className='domoDesc'>{post.desc}</p> : <></>}
             </div>
@@ -121,22 +130,26 @@ const PostList = (props, showPopup, onShowPopup) => {
 };
 const App = () => {
     const [reloadPosts, setReloadPosts] = useState(false);
-    const [showPopup, setShowPopup] = useState(true);
+    const [showPopup, setShowPopup] = useState(false);
 
     return (
-        <div> {showPopup ? <div id="makeDomo">
-            <PostForm
-                showPopup={showPopup}
-                closePopup={() => setShowPopup(false)}
-                triggerReload={() => setReloadPosts(!reloadPosts)} />
+        <div>
+            <CreatePostBtn
+                onShowPopup={() => setShowPopup(true)} />
 
-        </div>
-            : null}
+            {showPopup ? <div id="makeDomo">
+                <PostForm
+                    showPopup={showPopup}
+                    closePopup={() => setShowPopup(false)}
+                    triggerReload={() => setReloadPosts(!reloadPosts)} />
+
+            </div>
+                : null}
 
             <div id="domos">
                 <PostList posts={[]}
                     showPopup={showPopup}
-                    onShowPopup={() => setShowPopup(true)}
+
                     reloadPosts={reloadPosts} />
             </div>
         </div>

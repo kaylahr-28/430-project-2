@@ -6,22 +6,24 @@ const makerPage = async (req, res) => {
 };
 
 const makePost = async (req, res) => {
-    if (!req.body.name || !req.body.age) {
-        return res.status(400).json({ error: 'Both name and age are required!' });
+    if (!req.body.title || !req.body.rank || !req.body.artist) {
+        return res.status(400).json({ error: 'Both song title, artist, and ranking are required!' });
     }
 
     //part e- adding description of the domo
     const postData = {
-        name: req.body.name,
-        age: req.body.age,
+        title: req.body.title,
+        rank: req.body.rank,
+        artist: req.body.artist,
         owner: req.session.account._id,
         desc: req.body.desc,
+        date: req.body.date,
     };
 
     try {
         const newPost = new Post(postData);
         await newPost.save();
-        return res.status(201).json({ name: newPost.name, age: newPost.age, desc: newPost.desc ? newPost.desc : '' });
+        return res.status(201).json({ title: newPost.title, artist: newPost.artist, rank: newPost.rank, desc: newPost.desc ? newPost.desc : '', date: newPost.date });
 
     } catch (err) {
         console.log(err);
@@ -35,7 +37,7 @@ const makePost = async (req, res) => {
 const getPosts = async (req, res) => {
     try {
         const query = { owner: req.session.account._id };
-        const docs = await Post.find(query).select('name age desc').lean().exec();
+        const docs = await Post.find(query).select('title artist rank desc date').lean().exec();
         return res.json({ posts: docs });
     } catch (err) {
         console.log(err);

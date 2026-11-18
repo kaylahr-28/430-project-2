@@ -59,6 +59,8 @@ nav:nth-child(1) {
     flex-direction: column;
 }
 
+#createBtn {}
+
 #postOverlay {
     position: fixed;
     inset: 0;
@@ -138,7 +140,8 @@ nav:nth-child(1) {
     font-size: 1.2em;
 }
 
-.formSubmit {
+.formSubmit,
+#createBtn {
     transition: background-color 0.4s ease;
     display: block;
     text-align: center;

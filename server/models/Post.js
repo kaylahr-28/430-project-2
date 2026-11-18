@@ -4,16 +4,27 @@ const _ = require('underscore');
 
 const setName = (name) => _.escape(name).trim();
 
+const dateFormat = new Intl.DateTimeFormat('en-US', {
+    month: 'long',
+    year: 'numeric'
+});
+
 const PostSchema = new mongoose.Schema({
-    name: {
+    title: {
         type: String,
         required: true,
         trim: true,
         set: setName,
     },
-    age: {
+    artist: {
+        type: String,
+        required: true,
+        trim: true,
+    },
+    rank: {
         type: Number,
         min: 0,
+        max: 5,
         required: true,
     },
     owner: {
@@ -23,7 +34,7 @@ const PostSchema = new mongoose.Schema({
     },
     createdDate: {
         type: Date,
-        default: Date.now,
+        default: dateFormat.format(new Date),
     },
     desc: {
         type: String,
@@ -31,9 +42,11 @@ const PostSchema = new mongoose.Schema({
 });
 
 PostSchema.statics.toAPI = (doc) => ({
-    name: doc.name,
-    age: doc.age,
+    title: doc.title,
+    artist: doc.artist,
+    rank: doc.rank,
     desc: doc.desc,
+    date: doc.createdDate
 });
 
 const PostModel = mongoose.model('Post', PostSchema);
