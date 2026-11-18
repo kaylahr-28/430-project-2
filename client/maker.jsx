@@ -30,39 +30,57 @@ const handlePost = (e, onPostAdded) => {
     return false;
 }
 
-const PostForm = (props) => {
+const PostForm = ({ showPopup, closePopup }) => {
 
-    return (
-        <div id='postOverlay' >
-            <div id='postContentClose' onClick={(e) => e.stopPropagation()}>
-                {/* {children} */}
-                <form id='postForm'
-                    onSubmit={(e) => handlePost(e, props.triggerReload)}
-                    name='postForm'
-                    action='/maker'
-                    method='POST'
-                    className='postForm'>
+    useEffect(() => {
 
-                    <label htmlFor='songName'>Song Title: </label>
-                    <input id='songName' type='text' name='name' placeholder='Song Name' />
-                    <label htmlFor='songRank'>Ranking (/5): </label>
-                    <input id='songRank' type='number' min='0' max='5' name='rank' />
-                    <label htmlFor='songDesc'>Description: </label>
-                    <input id='songDesc' type='text' name='desc' placeholder='Song Rating Reasoning' />
+        if (showPopup) {
+            helper?.showPostForm();
+        } else {
+            helper?.hidePostForm();
 
-                    <input className='makePostSubmit' type='submit' value='Create Post' />
-                </form>
-                <button className='closePopup' onClick={helper.hidePostForm} >Cancel</button>
+        }
+    }, [showPopup]);
+    return (<div id="postOverlay">
+        <div id='postContentClose' onClick={(e) => e.stopPropagation()}>
+            {/* {children} */}
+            <form id='postForm'
+                onSubmit={(e) => handlePost(e, props.triggerReload)}
+                name='postForm'
+                action='/maker'
+                method='POST'
+                className='postForm'>
 
-            </div>
+                <label htmlFor='songName'>Song Title: </label>
+                <input id='songName' type='text' name='name' placeholder='Song Name' />
+                <label htmlFor='songRank'>Ranking (/5): </label>
+                <input id='songRank' type='number' min='0' max='5' name='rank' />
+                <label htmlFor='songDesc'>Description: </label>
+                <input id='songDesc' type='text' name='desc' placeholder='Song Rating Reasoning' />
+
+                <input className='makePostSubmit' type='submit' value='Create Post' />
+            </form>
+            <button className='closePopup' type='button' onClick={closePopup} >Cancel</button>
+
         </div>
+    </div>
+
     );
 
 };
 
-const PostList = (props, openPopup) => {
+const PostList = (props, showPopup, onShowPopup) => {
     const [posts, setPosts] = useState(props.posts);
 
+    useEffect(() => {
+
+        if (showPopup) {
+            helper?.showPostForm();
+        } else {
+            helper?.hidePostForm();
+
+        }
+    }, [showPopup]);
 
     useEffect(() => {
         const loadPostsFromServer = async () => {
@@ -77,7 +95,7 @@ const PostList = (props, openPopup) => {
         return (
             <div className='domoList'>
                 <h3 className='emptyDomo'>No Posts Yet...</h3>
-                <button onClick={helper.showPostForm}>Create Post!</button>
+                <button onClick={onShowPopup}>Create Post!</button>
 
             </div>
         );
@@ -103,16 +121,22 @@ const PostList = (props, openPopup) => {
 };
 const App = () => {
     const [reloadPosts, setReloadPosts] = useState(false);
+    const [showPopup, setShowPopup] = useState(true);
 
     return (
-        <div>
-            <div id='makeDomo'>
-                <PostForm triggerReload={() => setReloadPosts(!reloadPosts)} />
+        <div> {showPopup ? <div id="makeDomo">
+            <PostForm
+                showPopup={showPopup}
+                closePopup={() => setShowPopup(false)}
+                triggerReload={() => setReloadPosts(!reloadPosts)} />
 
-            </div>
-            <div id='domos'>
+        </div>
+            : null}
+
+            <div id="domos">
                 <PostList posts={[]}
-                    openPopup={() => setIsPopupShown(true)}
+                    showPopup={showPopup}
+                    onShowPopup={() => setShowPopup(true)}
                     reloadPosts={reloadPosts} />
             </div>
         </div>
