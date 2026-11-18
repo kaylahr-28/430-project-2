@@ -2,31 +2,27 @@ const helper = require('./helper.js');
 const React = require('react');
 const { useState, useEffect } = React;
 const { createRoot } = require('react-dom/client');
-import Popup from './Popup.jsx';
+
 
 
 
 const handlePost = (e, onPostAdded) => {
-    // if (isCanceled) {
-    //     helper.hidePostForm();
-    //     setisCanceled(false);
-    //     return;
-    // }
+
     e.preventDefault();
     helper.hideError();
 
-    const name = e.target.querySelector("#songName").value;
+    const title = e.target.querySelector("#songTitle").value;
+    const artist = e.target.querySelector("#songArtist").value;
     const rank = e.target.querySelector("#songRank").value;
     let desc = e.target.querySelector('#songDesc').value;
     if (!desc) desc = '';
 
-    if (!name || !age) {
+    if (!title || !rank || !artist) {
         helper.handleError(('All fields are required!'));
         return false;
     }
 
-    helper.sendPost(e.target.action, { name, rank, desc }, onPostAdded);
-    //  setisCanceled(false);
+    helper.sendPost(e.target.action, { title, artist, rank, desc }, onPostAdded);
     return false;
 }
 
@@ -104,20 +100,21 @@ const PostList = (props, showPopup) => {
 
     if (posts.length === 0) {
         return (
-            <div className='domoList'>
-                <h3 className='emptyDomo'>No Posts Yet...</h3>
+            <div className='postList'>
+                <h3 className='emptyPosts'>No Posts Yet...</h3>
             </div>
         );
     }
 
     const postNodes = posts.map(post => {
         return (
-            <div key={post._id} className='domo'>
-                <img src='/assets/img/domoface.jpeg' alt='domo face' className='domoFace' />
-                <h3 className='domoTitle'>{post.title} by {post.artist}</h3>
-                <h3 className='domoAge'>Rank: {post.rank}/5</h3>
+            <div key={post._id} className='post'>
+                <img src='/assets/img/musicnote.png' alt='music note' className='domoFace' />
+                <h3 className='songTitle'>{post.title} by {post.artist}</h3>
+                <h3 className='songRank'>Rank: {post.rank}/5</h3>
                 {/**if a description was given, add it to display */}
-                {post.desc ? <p className='domoDesc'>{post.desc}</p> : <></>}
+                {post.desc ? <p className='songDesc'>{post.desc}</p> : <></>}
+                <h4>Created {post.dateCreated}</h4>
             </div>
         );
     });

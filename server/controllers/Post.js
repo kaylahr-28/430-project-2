@@ -5,6 +5,10 @@ const makerPage = async (req, res) => {
     return res.render('app');
 };
 
+const feedPage = async (req, res) => {
+    return res.render('feed');
+}
+
 const makePost = async (req, res) => {
     if (!req.body.title || !req.body.rank || !req.body.artist) {
         return res.status(400).json({ error: 'Both song title, artist, and ranking are required!' });
@@ -45,6 +49,20 @@ const getPosts = async (req, res) => {
     }
 };
 
+
+const getFeed = async (req, res) => {
+    try {
+        //find all users in the following array
+        const query = { _id: { $in: req.session.account.following } };
+        const docs = await Post.find(query);
+        console.log('feed', docs);
+        return res.json({ feed: docs });
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ error: 'Error retrieving users :(' });
+    }
+};
+
 module.exports = {
-    makerPage, makePost, getPosts
+    makerPage, makePost, getPosts, getFeed, feedPage
 };

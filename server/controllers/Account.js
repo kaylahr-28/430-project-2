@@ -9,10 +9,6 @@ const moreUsersPage = async (req, res) => {
     return res.render('users');
 }
 
-const feedPage = async (req, res) => {
-    return res.render('feed');
-}
-
 const getUsers = async (req, res) => {
     try {
         //find all users EXCEPT user's own account
@@ -26,19 +22,31 @@ const getUsers = async (req, res) => {
     }
 };
 
-const getFeed = async (req, res) => {
-    try {
-        //find all users EXCEPT user's own account
-        const query = { _id: { $ne: req.session.account._id } };
-        const docs = await Account.find(query);
+const controlFollow = async (req, res) => {
 
-        return res.json({ users: docs });
+    try {  //find user that is being (un)followed
+        const user = req.body.id;
+        const myAccount = await Account.findOne({ _id: req.session.account._id });
+        console.log(myAccount);
+
+        //if im already following user, unfollow
+        if (myAccount.following.includes(user)) {
+            myAccount.following.pull(user);
+        } else {
+            //follow
+            myAccount.following.push(user);
+
+        };
+
+        await myAccount.save();
+        return res.status(204).json({ following: myAccount.following });
+
     } catch (err) {
         console.log(err);
-        return res.status(500).json({ error: 'Error retrieving users :(' });
-    }
-};
 
+        return res.status(500).json({ error: 'An error occurred while (un)following!' });
+    }
+}
 
 const logout = (req, res) => {
     //removes user's session, called on logout so
@@ -103,6 +111,5 @@ module.exports = {
     signup,
     moreUsersPage,
     getUsers,
-    feedPage,
-    getFeed
+    controlFollow
 }

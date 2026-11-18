@@ -3,101 +3,221 @@ const React = require('react');
 const { useState, useEffect } = React;
 const { createRoot } = require('react-dom/client');
 
-const handlePost = (e, onPostAdded) => {
-    e.preventDefault();
-    helper.hideError();
 
-    const name = e.target.querySelector("#domoName").value;
-    const age = e.target.querySelector("#domoAge").value;
-    const desc = e.target.querySelector('#domoDesc').value;
-    if (!desc) desc = '';
 
-    if (!name || !age) {
-        helper.handleError(('All fields are required!'));
-        return false;
-    }
 
-    helper.sendPost(e.target.action, { name, age, desc }, onPostAdded);
-    return false;
-}
+// const handlePost = (e, onPostAdded) => {
 
-const PostForm = (props) => {
+//     e.preventDefault();
+//     helper.hideError();
+
+//     const title = e.target.querySelector("#songTitle").value;
+//     const artist = e.target.querySelector("#songArtist").value;
+//     const rank = e.target.querySelector("#songRank").value;
+//     let desc = e.target.querySelector('#songDesc').value;
+//     if (!desc) desc = '';
+
+//     if (!title || !rank || !artist) {
+//         helper.handleError(('All fields are required!'));
+//         return false;
+//     }
+
+//     helper.sendPost(e.target.action, { title, artist, rank, desc }, onPostAdded);
+//     return false;
+// }
+
+// const CreatePostBtn = ({ onShowPopup }) => {
+//     return (
+//         <button id='createBtn' onClick={onShowPopup}>Create Post!</button>
+//     );
+// }
+
+// const PostForm = ({ showPopup, closePopup }) => {
+
+//     useEffect(() => {
+
+//         if (showPopup) {
+//             helper?.showPostForm();
+//         } else {
+//             helper?.hidePostForm();
+
+//         }
+//     }, [showPopup]);
+//     return (<div id="postOverlay">
+//         <div id='postContentClose' onClick={(e) => e.stopPropagation()}>
+//             {/* {children} */}
+//             <form id='postForm'
+//                 onSubmit={(e) => handlePost(e, props.triggerReload)}
+//                 name='postForm'
+//                 action='/maker'
+//                 method='POST'
+//                 className='postForm'>
+
+//                 <label htmlFor='songName'>Song Title: </label>
+//                 <input id='songName' type='text' name='title' placeholder='Song Name' />
+//                 <label htmlFor='songArtist'>Artist: </label>
+//                 <input id='songArtist' type='text' name='artist' placeholder='Artist Name' />
+
+//                 <label htmlFor='songRank'>Ranking (/5): </label>
+//                 <input id='songRank' type='number' min='0' max='5' name='rank' />
+//                 <label htmlFor='songDesc'>Description: </label>
+//                 <input id='songDesc' type='text' name='desc' placeholder='Reasoning' />
+
+//                 <input className='makePostSubmit' type='submit' value='Create Post' />
+//             </form>
+//             <button className='closePopup' type='button' onClick={closePopup} >Cancel</button>
+
+//         </div>
+//     </div>
+
+//     );
+
+// };
+
+// const PostList = (props, showPopup) => {
+//     const [posts, setPosts] = useState(props.posts);
+
+//     useEffect(() => {
+
+//         if (showPopup) {
+//             helper?.showPostForm();
+//         } else {
+//             if (document.getElementById('postOverlay')) {
+//                 helper?.hidePostForm();
+
+//             }
+//         }
+//     }, [showPopup]);
+
+//     useEffect(() => {
+//         const loadPostsFromServer = async () => {
+//             const response = await fetch('/getPosts');
+//             const data = await response.json();
+//             setPosts(data.posts);
+//         };
+//         loadPostsFromServer();
+//     }, [props.reloadPosts]);
+
+//     if (posts.length === 0) {
+//         return (
+//             <div className='postList'>
+//                 <h3 className='emptyPosts'>No Posts Yet...</h3>
+//             </div>
+//         );
+//     }
+
+//     const postNodes = posts.map(post => {
+//         return (
+//             <div key={post._id} className='post'>
+//                 <img src='/assets/img/musicnote.png' alt='music note' className='domoFace' />
+//                 <h3 className='songTitle'>{post.title} by {post.artist}</h3>
+//                 <h3 className='songRank'>Rank: {post.rank}/5</h3>
+//                 {/**if a description was given, add it to display */}
+//                 {post.desc ? <p className='songDesc'>{post.desc}</p> : <></>}
+//                 <h4>Created {post.dateCreated}</h4>
+//             </div>
+//         );
+//     });
+
+//     return (
+//         <div className='domoList'>
+//             {postNodes}
+//         </div>
+//     );
+// };
+
+
+const FeedHeader = (props) => {
     return (
-        <form id='domoForm'
-            onSubmit={(e) => handleDomo(e, props.triggerReload)}
-            name='domoForm'
-            action='/maker'
-            method='POST'
-            className='domoForm'
-        >
-            <label htmlFor='name'>Name: </label>
-            <input id='domoName' type='text' name='name' placeholder='Domo Name' />
-            <label htmlFor='age'>Age: </label>
-            <input id='domoAge' type='number' min='0' name='age' />
-            <label htmlFor='desc'>Description: </label>
-            <input id='domoDesc' type='text' name='desc' placeholder='Domo Description' />
-
-            <input className='makeDomoSubmit' type='submit' value='Make Domo' />
-        </form>
+        <h1>My Feed</h1>
     );
 };
 
-const PostList = (props) => {
-    const [posts, setPosts] = useState(props.posts);
-
+const FeedList = (props) => {
+    const [feed, setFeed] = useState([]);
+    const formatDate = (date) => {
+        const dateFormat = new Intl.DateTimeFormat('en-US', {
+            month: 'long',
+            year: 'numeric'
+        });
+        return dateFormat.format(date);
+    }
     useEffect(() => {
-        const loadPostsFromServer = async () => {
-            const response = await fetch('/getPosts');
+        const loadFeedFromServer = async () => {
+            const response = await fetch('/getFeed');
             const data = await response.json();
-            setPosts(data.posts);
+            setFeed(data.feed);
         };
-        loadPostsFromServer();
-    }, [props.reloadPosts]);
+        loadFeedFromServer();
+    }, [props.reloadFeed]);
 
-    if (posts.length === 0) {
+    if (feed.length === 0) {
         return (
-            <div className='domoList'>
-                <h3 className='emptyDomo'>No Posts Yet...</h3>
+            <div className='postList'>
+                <h3 className='emptyPosts'>Your feed is looking quiet ...</h3>
             </div>
         );
     }
-
-    const postNodes = posts.map(post => {
+    const userNodes = users.map(user => {
         return (
-            <div key={post._id} className='domo'>
-                <img src='/assets/img/domoface.jpeg' alt='domo face' className='domoFace' />
-                <h3 className='domoName'>Name: {post.name}</h3>
-                <h3 className='domoAge'>Age: {post.age}</h3>
-                {/**if a description was given, add it to display */}
-                {post.desc ? <p className='domoDesc'>{post.desc}</p> : <></>}
+            <div key={user._id} className='user'>
+                <img src='/assets/img/musicnote.png' alt='music note' className='domoFace' />
+                <h3 className='username'>Username: {user.username}</h3>
+                <h4>Joined {formatDate(user.dateCreated)}</h4>
+
             </div>
         );
     });
 
     return (
-        <div className='domoList'>
-            {postNodes}
+        <div className='postList'>
+            {userNodes}
         </div>
     );
 };
 
+
+
 const App = () => {
-    const [reloadPosts, setReloadPosts] = useState(false);
+    const [reloadFeed, setReloadFeed] = useState(false);
+    const [showPopup, setShowPopup] = useState(false);
 
     return (
-        <div>
-            <div id='makeDomo'>
-                <PostForm triggerReload={() => setReloadPosts(!reloadPosts)} />
+        <div>did it work
+            {/* <CreatePostBtn
+                onShowPopup={() => setShowPopup(true)} />
+
+            {showPopup ? <div id="makeDomo">
+                <PostForm
+                    showPopup={showPopup}
+                    closePopup={() => setShowPopup(false)}
+                    triggerReload={() => setReloadPosts(!reloadPosts)} />
+
             </div>
-            <div id='domos'>
-                <PostList posts={[]} reloadPosts={reloadPosts} />
+                : null}
+
+            <div id="domos">
+                <PostList posts={[]}
+                    showPopup={showPopup}
+
+                    reloadPosts={reloadPosts} />
+            </div> */}
+
+            <div>
+                <FeedHeader />
+                <div id='posts'>
+                    <FeedList
+                        triggerReload={() => setReloadFeed(!reloadFeed)}
+                        reloadFeed={reloadFeed} />
+                </div>
             </div>
+
         </div>
     );
 };
 
 const init = () => {
-    const root = createRoot(document.getElementById('app'));
+    const root = createRoot(document.getElementById('feed'));
     root.render(<App />);
 };
 

@@ -43,6 +43,10 @@ const AccountSchema = new mongoose.Schema({
     type: Date || String,
     default: dateFormat.format(new Date),
   },
+  following: {
+    type: Array,
+    default: []
+  }
 });
 
 // Converts a doc to something we can store in redis later on.
@@ -50,6 +54,7 @@ AccountSchema.statics.toAPI = (doc) => ({
   username: doc.username,
   _id: doc._id,
   joined: dateFormat.format(doc.createdDate),
+  following: doc.following
 });
 
 // Helper function to hash a password
