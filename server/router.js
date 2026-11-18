@@ -16,6 +16,10 @@ const router = (app) => {
     app.get('/users', mid.requiresLogin, controllers.Account.moreUsersPage);
     app.get('/getUsers', mid.requiresLogin, controllers.Account.getUsers)
 
+    app.get('/feed', mid.requiresLogin, controllers.Account.feedPage);
+    app.get('/getFeed', mid.requiresLogin, controllers.Account.getFeed);
+
+
 
     app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
 };

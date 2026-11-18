@@ -2,14 +2,22 @@ const helper = require('./helper.js');
 const React = require('react');
 const { useState, useEffect } = React;
 const { createRoot } = require('react-dom/client');
+import Popup from './Popup.jsx';
+
+
 
 const handlePost = (e, onPostAdded) => {
+    // if (isCanceled) {
+    //     helper.hidePostForm();
+    //     setisCanceled(false);
+    //     return;
+    // }
     e.preventDefault();
     helper.hideError();
 
-    const name = e.target.querySelector("#domoName").value;
-    const age = e.target.querySelector("#domoAge").value;
-    const desc = e.target.querySelector('#domoDesc').value;
+    const name = e.target.querySelector("#songName").value;
+    const rank = e.target.querySelector("#songRank").value;
+    let desc = e.target.querySelector('#songDesc').value;
     if (!desc) desc = '';
 
     if (!name || !age) {
@@ -17,33 +25,44 @@ const handlePost = (e, onPostAdded) => {
         return false;
     }
 
-    helper.sendPost(e.target.action, { name, age, desc }, onPostAdded);
+    helper.sendPost(e.target.action, { name, rank, desc }, onPostAdded);
+    //  setisCanceled(false);
     return false;
 }
 
 const PostForm = (props) => {
-    return (
-        <form id='domoForm'
-            onSubmit={(e) => handleDomo(e, props.triggerReload)}
-            name='domoForm'
-            action='/maker'
-            method='POST'
-            className='domoForm'
-        >
-            <label htmlFor='name'>Name: </label>
-            <input id='domoName' type='text' name='name' placeholder='Domo Name' />
-            <label htmlFor='age'>Age: </label>
-            <input id='domoAge' type='number' min='0' name='age' />
-            <label htmlFor='desc'>Description: </label>
-            <input id='domoDesc' type='text' name='desc' placeholder='Domo Description' />
 
-            <input className='makeDomoSubmit' type='submit' value='Make Domo' />
-        </form>
+    return (
+        <div id='postOverlay' >
+            <div id='postContentClose' onClick={(e) => e.stopPropagation()}>
+                {/* {children} */}
+                <form id='postForm'
+                    onSubmit={(e) => handlePost(e, props.triggerReload)}
+                    name='postForm'
+                    action='/maker'
+                    method='POST'
+                    className='postForm'>
+
+                    <label htmlFor='songName'>Song Title: </label>
+                    <input id='songName' type='text' name='name' placeholder='Song Name' />
+                    <label htmlFor='songRank'>Ranking (/5): </label>
+                    <input id='songRank' type='number' min='0' max='5' name='rank' />
+                    <label htmlFor='songDesc'>Description: </label>
+                    <input id='songDesc' type='text' name='desc' placeholder='Song Rating Reasoning' />
+
+                    <input className='makePostSubmit' type='submit' value='Create Post' />
+                </form>
+                <button className='closePopup' onClick={helper.hidePostForm} >Cancel</button>
+
+            </div>
+        </div>
     );
+
 };
 
-const PostList = (props) => {
+const PostList = (props, openPopup) => {
     const [posts, setPosts] = useState(props.posts);
+
 
     useEffect(() => {
         const loadPostsFromServer = async () => {
@@ -58,6 +77,8 @@ const PostList = (props) => {
         return (
             <div className='domoList'>
                 <h3 className='emptyDomo'>No Posts Yet...</h3>
+                <button onClick={helper.showPostForm}>Create Post!</button>
+
             </div>
         );
     }
@@ -67,7 +88,7 @@ const PostList = (props) => {
             <div key={post._id} className='domo'>
                 <img src='/assets/img/domoface.jpeg' alt='domo face' className='domoFace' />
                 <h3 className='domoName'>Name: {post.name}</h3>
-                <h3 className='domoAge'>Age: {post.age}</h3>
+                <h3 className='domoAge'>Rank: {post.age}/5</h3>
                 {/**if a description was given, add it to display */}
                 {post.desc ? <p className='domoDesc'>{post.desc}</p> : <></>}
             </div>
@@ -80,7 +101,6 @@ const PostList = (props) => {
         </div>
     );
 };
-
 const App = () => {
     const [reloadPosts, setReloadPosts] = useState(false);
 
@@ -88,9 +108,12 @@ const App = () => {
         <div>
             <div id='makeDomo'>
                 <PostForm triggerReload={() => setReloadPosts(!reloadPosts)} />
+
             </div>
             <div id='domos'>
-                <PostList posts={[]} reloadPosts={reloadPosts} />
+                <PostList posts={[]}
+                    openPopup={() => setIsPopupShown(true)}
+                    reloadPosts={reloadPosts} />
             </div>
         </div>
     );

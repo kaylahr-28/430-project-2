@@ -9,7 +9,24 @@ const moreUsersPage = async (req, res) => {
     return res.render('users');
 }
 
+const feedPage = async (req, res) => {
+    return res.render('feed');
+}
+
 const getUsers = async (req, res) => {
+    try {
+        //find all users EXCEPT user's own account
+        const query = { _id: { $ne: req.session.account._id } };
+        const docs = await Account.find(query);
+
+        return res.json({ users: docs });
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ error: 'Error retrieving users :(' });
+    }
+};
+
+const getFeed = async (req, res) => {
     try {
         //find all users EXCEPT user's own account
         const query = { _id: { $ne: req.session.account._id } };
@@ -85,5 +102,7 @@ module.exports = {
     logout,
     signup,
     moreUsersPage,
-    getUsers
+    getUsers,
+    feedPage,
+    getFeed
 }
