@@ -23,10 +23,13 @@ const getUsers = async (req, res) => {
 };
 
 const controlFollow = async (req, res) => {
+    const io = req.app.get('io');
 
     try {  //find user that is being (un)followed
-        const user = req.body.id;
+        const user = req.body.userId;
         const myAccount = await Account.findOne({ _id: req.session.account._id });
+        console.log('user:', user);
+
         console.log(myAccount);
 
         //if im already following user, unfollow
@@ -39,7 +42,12 @@ const controlFollow = async (req, res) => {
         };
 
         await myAccount.save();
-        return res.status(204).json({ following: myAccount.following });
+        //const updatedItem = req.body;
+        console.log('called frm socket');
+        // Broadcast the change to all connected React clients
+        io.emit('data_changed', myAccount.following);
+
+        return res.status(200).json({ following: myAccount.following });
 
     } catch (err) {
         console.log(err);

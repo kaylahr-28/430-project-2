@@ -5,22 +5,11 @@ const { createRoot } = require('react-dom/client');
 
 
 const handleFollow = (e, onFollowClick, id) => {
-
+    let userId = id;
     e.preventDefault();
     helper.hideError();
-
-    // const title = e.target.querySelector("#songTitle").value;
-    // const artist = e.target.querySelector("#songArtist").value;
-    // const rank = e.target.querySelector("#songRank").value;
-    // let desc = e.target.querySelector('#songDesc').value;
-    // if (!desc) desc = '';
-
-    // if (!title || !rank || !artist) {
-    //     helper.handleError(('All fields are required!'));
-    //     return false;
-    // }
-
-    helper.sendPost(e.target.action, { id }, onFollowClick);
+    console.log('id', userId);
+    helper.sendPost(e.target.action, { userId }, onFollowClick);
     return false;
 }
 

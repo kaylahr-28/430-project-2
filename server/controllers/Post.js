@@ -54,7 +54,7 @@ const getFeed = async (req, res) => {
     try {
         //find all users in the following array
         const query = { _id: { $in: req.session.account.following } };
-        const docs = await Post.find(query);
+        const docs = await Post.find(query).lean().exec();
         console.log('feed', docs);
         return res.json({ feed: docs });
     } catch (err) {

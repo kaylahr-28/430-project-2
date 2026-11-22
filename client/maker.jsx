@@ -32,7 +32,7 @@ const CreatePostBtn = ({ onShowPopup }) => {
     );
 }
 
-const PostForm = ({ showPopup, closePopup }) => {
+const PostForm = ({ props, showPopup, closePopup }) => {
 
     useEffect(() => {
 
@@ -45,7 +45,7 @@ const PostForm = ({ showPopup, closePopup }) => {
     }, [showPopup]);
     return (<div id="postOverlay">
         <div id='postContentClose' onClick={(e) => e.stopPropagation()}>
-            {/* {children} */}
+
             <form id='postForm'
                 onSubmit={(e) => handlePost(e, props.triggerReload)}
                 name='postForm'
@@ -143,7 +143,7 @@ const App = () => {
             </div>
                 : null}
 
-            <div id="domos">
+            <div id="posts">
                 <PostList posts={[]}
                     showPopup={showPopup}
 

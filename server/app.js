@@ -14,6 +14,12 @@ const redis = require('redis');
 
 const router = require('./router.js');
 
+/* Here we are importing our /server/io.js file, which exports a single
+  function called socketSetup. This is very similar to the line above
+  where we import the router function from router.
+*/
+const socketSetup = require('./io.js');
+
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
 const dbURI = process.env.MONGODB_URI || 'mongodb://localhost/Project2';
@@ -68,7 +74,14 @@ redisClient.connect().then(() => {
 
     router(app);
 
-    app.listen(port, (err) => {
+    /* The socket.io library allows us to add socket.io to our existing
+  http or express servers. Look at the /server/io.js file now to see
+  how this is working. The function then returns a server that we can
+  start that will have socket.io along with everything else.
+*/
+    const server = socketSetup(app);
+
+    server.listen(port, (err) => {
         if (err) { throw err; }
         console.log(`Listening on port ${port}`);
     });
