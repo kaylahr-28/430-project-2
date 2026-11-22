@@ -1,6 +1,6 @@
 const controllers = require('./controllers');
 const mid = require('./middleware');
-const socket = require('./io');
+//const socket = require('./io');
 
 const router = (app) => {
     app.get('/getPosts', mid.requiresLogin, controllers.Post.getPosts);

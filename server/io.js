@@ -41,7 +41,7 @@ const socketSetup = (app) => {
     //     res.status(200).json({ status: 'Notification sent' });
     // });
 
-    io.on('data_changed', (socket) => {
+    io.on('data_changed', () => {
         console.log('data has changed');
 
     });
