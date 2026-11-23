@@ -77,6 +77,16 @@ const PostForm = ({ props, showPopup, closePopup }) => {
 const PostList = (props, showPopup) => {
     const [posts, setPosts] = useState(props.posts);
 
+    const formatDate = (date) => {
+        const dateFormat = new Intl.DateTimeFormat('en-US', {
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric'
+        });
+        return dateFormat.format(date);
+    }
+
+    //open and close create post popup
     useEffect(() => {
 
         if (showPopup) {
@@ -114,7 +124,7 @@ const PostList = (props, showPopup) => {
                 <h3 className='songRank'>Rank: {post.rank}/5</h3>
                 {/**if a description was given, add it to display */}
                 {post.desc ? <p className='songDesc'>{post.desc}</p> : <></>}
-                <h4>Created {post.dateCreated}</h4>
+                <h4>Created {formatDate(post.dateCreated)}</h4>
             </div>
         );
     });

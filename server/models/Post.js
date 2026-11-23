@@ -38,7 +38,11 @@ const PostSchema = new mongoose.Schema({
     },
     desc: {
         type: String,
-    }
+    },
+    //     username: {
+    //         type: String,
+    //         required: true,
+    // }
 });
 
 PostSchema.statics.toAPI = (doc) => ({

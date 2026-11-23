@@ -1,5 +1,6 @@
 const models = require('../models');
 const Account = models.Account;
+const mongoose = require('mongoose');
 
 const loginPage = (req, res) => {
     return res.render('login');
@@ -23,10 +24,10 @@ const getUsers = async (req, res) => {
 };
 
 const controlFollow = async (req, res) => {
-    const io = req.app.get('io');
 
     try {  //find user that is being (un)followed
-        const user = req.body.userId;
+        //keep as object id
+        const user = mongoose.Types.ObjectId.createFromHexString(req.body.userId);
         const myAccount = await Account.findOne({ _id: req.session.account._id });
         console.log('user:', user);
 
@@ -40,6 +41,7 @@ const controlFollow = async (req, res) => {
             myAccount.following.push(user);
 
         };
+        const io = req.app.get('io');
 
         await myAccount.save();
         //const updatedItem = req.body;

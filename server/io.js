@@ -32,6 +32,7 @@ const socketSetup = (app) => {
     const server = http.createServer(app);
     io = new Server(server);
     app.set('io', io);
+
     // app.post('/controlFollow', (req, res) => {
     //     const updatedItem = req.body;
     //     console.log('called frm socket');

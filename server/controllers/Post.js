@@ -1,5 +1,7 @@
 const models = require('../models');
 const Post = models.Post;
+const mongoose = require('mongoose');
+
 
 const makerPage = async (req, res) => {
     return res.render('app');
@@ -52,8 +54,12 @@ const getPosts = async (req, res) => {
 
 const getFeed = async (req, res) => {
     try {
+        //usecreatehexfrom string maybe, or get string out of the array
         //find all users in the following array
-        const query = { _id: { $in: req.session.account.following } };
+        const following = req.session.account.following.map(id => mongoose.Types.ObjectId.createFromHexString(id));
+        const query = { owner: { $in: following } };
+
+        console.log('the query:', following);
         const docs = await Post.find(query).lean().exec();
         console.log('feed', docs);
         return res.json({ feed: docs });
