@@ -28,7 +28,7 @@ const handlePost = (e, onPostAdded) => {
 
 const CreatePostBtn = ({ onShowPopup }) => {
     return (
-        <button id='createBtn' onClick={onShowPopup}>Create Post!</button>
+        <button id='is-button createBtn' onClick={onShowPopup}>Create Post!</button>
     );
 }
 
@@ -118,19 +118,26 @@ const PostList = (props, showPopup) => {
 
     const postNodes = posts.map(post => {
         return (
-            <div key={post._id} className='post'>
-                <img src='/assets/img/musicnote.png' alt='music note' className='domoFace' />
-                <h3 className='songTitle'>{post.title} by {post.artist}</h3>
-                <h3 className='songRank'>Rank: {post.rank}/5</h3>
+            <div key={post._id} className='post is-flex is-flex-direction-column is-justify-content-center has-background-info'>
+                <div class='songTitleRank is-flex is-flex-direction-row is-justify-content-space-between'>
+                    <h3 className='songTitle'>{post.title} by {post.artist}</h3>
+                    <div className='songRankStar'>
+                        <h3 className='songRank'>Rank: {post.rank}/5</h3>
+                        <img src='/assets/img/star-solid.svg' alt='star' className='starSvg' />
+                    </div>
+                </div>
                 {/**if a description was given, add it to display */}
                 {post.desc ? <p className='songDesc'>{post.desc}</p> : <></>}
-                <h4>Created {formatDate(post.dateCreated)}</h4>
+                <div class='songUserDate'>
+                    <img src='/assets/img/musicnote.png' alt='music note' className='postImg' />
+                    <h4>Created {formatDate(post.dateCreated)}</h4>
+                </div>
             </div>
         );
     });
 
     return (
-        <div className='domoList'>
+        <div className='postList is-flex is-flex-direction-column is-justify-content-center'>
             {postNodes}
         </div>
     );
@@ -140,11 +147,11 @@ const App = () => {
     const [showPopup, setShowPopup] = useState(false);
 
     return (
-        <div>
+        <div className='is-flex is-flex-direction-column is-justify-content-center'>
             <CreatePostBtn
                 onShowPopup={() => setShowPopup(true)} />
 
-            {showPopup ? <div id="makeDomo">
+            {showPopup ? <div id="makePost">
                 <PostForm
                     showPopup={showPopup}
                     closePopup={() => setShowPopup(false)}
@@ -153,7 +160,7 @@ const App = () => {
             </div>
                 : null}
 
-            <div id="posts">
+            <div id="posts" className='is-flex is-flex-direction-column'>
                 <PostList posts={[]}
                     showPopup={showPopup}
 

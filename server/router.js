@@ -16,6 +16,7 @@ const router = (app) => {
 
     app.get('/users', mid.requiresLogin, controllers.Account.moreUsersPage);
     app.get('/getUsers', mid.requiresLogin, controllers.Account.getUsers)
+    app.get('/getSelf', mid.requiresLogin, controllers.Account.getSelf)
 
     app.get('/feed', mid.requiresLogin, controllers.Post.feedPage);
     app.get('/getFeed', mid.requiresLogin, controllers.Post.getFeed);

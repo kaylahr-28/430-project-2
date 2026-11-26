@@ -23,6 +23,18 @@ const getUsers = async (req, res) => {
     }
 };
 
+const getSelf = async (req, res) => {
+    try {
+        const myAccount = await Account.findOne({ _id: req.session.account._id });
+        return res.json({ following: myAccount.following });
+
+    } catch (err) {
+        console.log(err);
+
+        return res.status(500).json({ error: 'An error occurred while receiving user data!' });
+
+    }
+}
 const controlFollow = async (req, res) => {
 
     try {  //find user that is being (un)followed
@@ -31,7 +43,6 @@ const controlFollow = async (req, res) => {
         const myAccount = await Account.findOne({ _id: req.session.account._id });
         console.log('user:', user);
 
-        console.log(myAccount);
 
         //if im already following user, unfollow
         if (myAccount.following.includes(user)) {
@@ -44,9 +55,9 @@ const controlFollow = async (req, res) => {
         const io = req.app.get('io');
 
         await myAccount.save();
-        //const updatedItem = req.body;
-        console.log('called frm socket');
-        // Broadcast the change to all connected React clients
+        console.log(myAccount);
+
+        // Broadcast change to all connected React clients
         io.emit('data_changed', myAccount.following);
 
         return res.status(200).json({ following: myAccount.following });
@@ -121,5 +132,6 @@ module.exports = {
     signup,
     moreUsersPage,
     getUsers,
+    getSelf,
     controlFollow
 }

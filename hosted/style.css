@@ -1,3 +1,70 @@
+:root {
+    --bulma-primary-h: 60deg;
+    --bulma-primary-l: 95%;
+    --bulma-link-h: 161deg;
+    --bulma-link-l: 77%;
+    --bulma-info-h: 284deg;
+    --bulma-info-l: 72%;
+    --bulma-success-h: 260deg;
+    --bulma-success-s: 100%;
+    --bulma-success-l: 64%;
+    --bulma-warning-h: 271deg;
+    --bulma-warning-s: 66%;
+    --bulma-warning-l: 8%;
+    --bulma-danger-h: 319deg;
+    --bulma-danger-l: 85%;
+}
+
+#logo {
+    height: 40px;
+    width: 40px;
+    /* 
+    float: left;
+    border-radius: 8px; */
+}
+
+.hidden {
+    display: none;
+}
+
+.songTitleRank,
+.songUserDate {}
+
+img.postImg {
+    /* margin-left: 25px;
+    margin-right: 10px; */
+    height: 50px;
+    width: 50px;
+    /* border-radius: 4px;
+    margin-top: 10px;
+    float: left; */
+}
+
+.starSvg {
+    width: 20px;
+    height: 20px;
+}
+
+#posts {
+    margin: 0 auto;
+}
+
+.post {
+    width: max(90%, 600px);
+    border: 2px solid #8CFFDA;
+    border-radius: 20px;
+    /* 
+    margin: 0 auto;
+    margin-top: 2px;
+    margin-bottom: 2px;
+
+  
+    padding: 10px;
+    min-height: 60px;
+    overflow: hidden; */
+}
+
+/* 
 html,
 body {
     height: 100%;
@@ -85,10 +152,10 @@ nav:nth-child(1) {
 
 .postForm label {
     display: inline-block;
-    /* width: 75px; */
+     width: 75px; 
     margin: 0 10px;
     font-size: 1.2em;
-    /* float: left; */
+     float: left; 
     color: white;
 }
 
@@ -185,9 +252,7 @@ nav:nth-child(1) {
     box-shadow: 0px 0px 1px 1px #3f3f74;
 }
 
-.hidden {
-    display: none;
-}
+
 
 #domoMessage {
     top: 250px;
@@ -239,34 +304,11 @@ nav:nth-child(1) {
     margin-top: 100px;
 }
 
-.post {
-    width: 95%;
-    margin: 0 auto;
-    margin-top: 2px;
-    margin-bottom: 2px;
-    border: 2px solid #3f3f74;
-    border-radius: 4px;
-    background-color: #3f3f74;
-    padding: 10px;
-    min-height: 60px;
-    overflow: hidden;
-}
-
 .post:hover {
     transition: border-color 0.2s ease-out;
     border-color: rgba(255, 255, 255, 0.8);
     transition: background-color 2.6s ease-out;
     background-color: #66bfff;
-}
-
-img.domoFace {
-    margin-left: 25px;
-    margin-right: 10px;
-    height: 50px;
-    width: 50px;
-    border-radius: 4px;
-    margin-top: 10px;
-    float: left;
 }
 
 h3.emptyPosts {
@@ -307,4 +349,4 @@ h3.songRank {
 
 .post:last-child {
     margin-bottom: 10px;
-}
+} */

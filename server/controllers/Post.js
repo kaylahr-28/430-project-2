@@ -24,13 +24,14 @@ const makePost = async (req, res) => {
         owner: req.session.account._id,
         desc: req.body.desc,
         date: req.body.date,
+        username: req.session.account.username,
     };
 
     try {
         const newPost = new Post(postData);
         await newPost.save();
         return res.status(201).json({ title: newPost.title, artist: newPost.artist, rank: newPost.rank, desc: newPost.desc ? newPost.desc : '', date: newPost.date });
-
+        //  return res.json({ redirect: '/maker' });
     } catch (err) {
         console.log(err);
         if (err.code === 11000) {
@@ -43,7 +44,7 @@ const makePost = async (req, res) => {
 const getPosts = async (req, res) => {
     try {
         const query = { owner: req.session.account._id };
-        const docs = await Post.find(query).select('title artist rank desc date').lean().exec();
+        const docs = await Post.find(query).select('title artist rank desc date username').lean().exec();
         return res.json({ posts: docs });
     } catch (err) {
         console.log(err);

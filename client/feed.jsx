@@ -23,13 +23,14 @@ const FeedList = (props) => {
         });
         return dateFormat.format(date);
     }
+    //watch account for changes and update feed whenever there's a change
 
     useEffect(() => {
         socket.connect();
 
         //change trigger reload whenever event is sent
         socket.on('data_changed', props.triggerReload);
-
+        console.log('detected change frm feed pg')
         return () => {
             socket.off('data_changed', props.triggerReload);
             socket.disconnect();
@@ -50,8 +51,6 @@ const FeedList = (props) => {
 
     }, [props.reloadFeed]);
 
-    //watch account for changes and update feed whenever there's a change
-
     if (feed.length === 0) {
         return (
             <div className='postList'>
@@ -59,26 +58,17 @@ const FeedList = (props) => {
             </div>
         );
     }
-    // const userNodes = users.map(user => {
-    //     return (
-    //         <div key={user._id} className='user'>
-    //             <img src='/assets/img/musicnote.png' alt='music note' className='domoFace' />
-    //             <h3 className='username'>Username: {user.username}</h3>
-    //             <h4>Joined {formatDate(user.dateCreated)}</h4>
 
-    //         </div>
-    //     );
-    // });
 
     const postNodes = feed.map(post => {
         return (
             <div key={post._id} className='post'>
-                <img src='/assets/img/musicnote.png' alt='music note' className='domoFace' />
+                <img src='/assets/img/musicnote.png' alt='music note' className='postImg' />
                 <h3 className='songTitle'>{post.title} by {post.artist}</h3>
                 <h3 className='songRank'>Rank: {post.rank}/5</h3>
                 {/**if a description was given, add it to display */}
                 {post.desc ? <p className='songDesc'>{post.desc}</p> : <></>}
-                <h4>Created {formatDate(post.dateCreated)}</h4>
+                <h4>{formatDate(post.dateCreated)}</h4>
             </div>
         );
     });

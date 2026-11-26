@@ -39,10 +39,11 @@ const PostSchema = new mongoose.Schema({
     desc: {
         type: String,
     },
-    //     username: {
-    //         type: String,
-    //         required: true,
-    // }
+    username: {
+        type: String,
+        required: true,
+
+    }
 });
 
 PostSchema.statics.toAPI = (doc) => ({
@@ -50,7 +51,8 @@ PostSchema.statics.toAPI = (doc) => ({
     artist: doc.artist,
     rank: doc.rank,
     desc: doc.desc,
-    date: doc.createdDate
+    date: doc.createdDate,
+    username: doc.username,
 });
 
 const PostModel = mongoose.model('Post', PostSchema);
